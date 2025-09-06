@@ -2,7 +2,6 @@ import { ApolloServer } from 'apollo-server';
 import { typeDefs } from './schema';
 import { prisma } from './lib/prisma';
 import merge from 'lodash.merge';
-
 import { GeneroRepository } from './genero/genero.repository';
 import { GeneroService } from './genero/genero.service';
 import { Context } from './context';
@@ -13,11 +12,17 @@ import { AtorRepository } from './ator/ator.repository';
 import { atorQueries } from './ator/ator.query';
 import { atorMutations } from './ator/ator.mutation';
 import { Ator } from './generated/prisma';
+import { FilmeService } from './filme/filme.service';
+import { FilmeRepository } from './filme/filme.repository';
+import { filmeQueries } from './filme/filme.query';
+import { filmeMutations } from './filme/filme.mutation';
 
 export async function startApolloServer() {
 
   const generoService = new GeneroService(new GeneroRepository(prisma));
   const atorService = new AtorService(new AtorRepository(prisma));
+  const filmeService = new FilmeService(new FilmeRepository(prisma), new AtorRepository(prisma), new GeneroRepository(prisma));
+
 
 
   const resolvers = merge(
@@ -30,7 +35,8 @@ export async function startApolloServer() {
                 return ator.data_nascimento.toISOString().split('T')[0];
             },
         },
-    }
+    },
+    { Query: filmeQueries, Mutation: filmeMutations },
   );
 
   const server = new ApolloServer({
@@ -40,6 +46,7 @@ export async function startApolloServer() {
       services: {
         generoService,
         atorService,
+        filmeService
       },
     }),
   });
