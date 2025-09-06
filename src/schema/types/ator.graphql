@@ -1,0 +1,29 @@
+type Ator {
+  id: ID!
+  nome: String!
+  data_nascimento: String
+  filmes: [Filme]
+}
+
+input AtorInput {
+  nome: String!
+  data_nascimento: String
+  filmesIds: [ID!]
+}
+
+input UpdateAtorInput {
+  nome: String
+  data_nascimento: String
+  filmesIds: [ID!]
+}
+
+extend type Query {
+  atores: [Ator!]!
+  ator(id: ID!): Ator
+}
+
+extend type Mutation {
+  criarAtor(input: AtorInput!): Ator!
+  atualizarAtor(id: ID!, input: UpdateAtorInput!): Ator!
+  excluirAtor(id: ID!): Boolean!
+}

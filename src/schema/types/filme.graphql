@@ -1,0 +1,44 @@
+type Filme {
+  id: ID!
+  nome: String!
+  ano_lancamento: Int!
+  sinopse: String
+  atores: [Ator]
+  generos: [Genero]
+}
+
+# Um tipo mais simples para listas, para evitar referências circulares complexas
+type FilmeSummary {
+  id: ID!
+  nome: String!
+}
+
+input FilmeInput {
+  nome: String!
+  ano_lancamento: Int!
+  sinopse: String
+  atoresIds: [ID!]
+  generosIds: [ID!]
+}
+
+input UpdateFilmeInput {
+  nome: String
+  ano_lancamento: Int
+  sinopse: String
+  atoresIds: [ID!]
+  generosIds: [ID!]
+}
+
+extend type Query {
+  filmes: [Filme!]!
+  filme(id: ID!): Filme
+}
+
+extend type Mutation {
+  criarFilme(input: FilmeInput!): Filme!
+  atualizarFilme(id: ID!, input: UpdateFilmeInput!): Filme!
+  excluirFilme(id: ID!): Boolean!
+  adicionarAtoresEmFilme(filmeId: ID!, atorIds: [ID!]!): Filme!
+  removerAtorDeFilme(filmeId: ID!, atorId: ID!): Filme!
+  adicionarGenerosEmFilme(filmeId: ID!, generoIds: [ID!]!): Filme!
+}

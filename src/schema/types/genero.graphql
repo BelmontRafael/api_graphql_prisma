@@ -1,0 +1,27 @@
+# Define a 'aparência' de um Gênero
+type Genero {
+    id: ID!
+    nome: String!
+    filmes: [Filme]
+}
+
+# Define os dados para criar/atualizar um Gênero
+input GeneroInput {
+    nome: String!
+}
+
+input UpdateGeneroInput {
+    nome: String
+}
+
+# 'extend' adiciona novas opções ao nosso tipo Query raiz
+extend type Query {
+    generos: [Genero!]!
+    genero(id: ID!): Genero
+}
+
+extend type Mutation {
+    criarGenero(input: GeneroInput!): Genero!
+    atualizarGenero(id: ID!, input: UpdateGeneroInput!): Genero!
+    excluirGenero(id: ID!): Boolean!
+}
